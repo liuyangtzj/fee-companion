@@ -441,6 +441,7 @@
                 </a>
                 <a href="#pricing" class="px-3 py-1.5 rounded-xl hover:bg-amber-50 hover:text-amber-600 transition" data-i18n="navPricing">Pricing</a>
                 <a href="#guide" class="px-3 py-1.5 rounded-xl hover:bg-slate-100/90 hover:text-sky-600 transition" data-i18n="navGuide">How to Use</a>
+                <a href="#privacy" class="px-3 py-1.5 rounded-xl hover:bg-slate-100/90 hover:text-sky-600 transition" data-i18n="navPrivacy">Privacy</a>
                 <a href="#support" class="px-3 py-1.5 rounded-xl hover:bg-slate-100/90 hover:text-sky-600 transition" data-i18n="navSupport">Support</a>
             </nav>
 
@@ -733,11 +734,97 @@
             </div>
         </section>
 
+        <!-- Privacy Policy & Data Handling Section (#privacy) -->
+        <section id="privacy" class="max-w-5xl mx-auto py-12 px-6">
+            <div class="text-center mb-10">
+                <div class="inline-flex items-center gap-2 pix-chip text-sky-800 bg-sky-50 border-sky-200 border-b-sky-300 mb-3">
+                    🔒 <span data-i18n="privacyBadge">Public Compliance Policy</span>
+                </div>
+                <h2 class="font-pixel text-2xl sm:text-3xl text-slate-900 font-bold" data-i18n="privacySectionTitle">Privacy Policy & Data Handling</h2>
+                <p class="text-xs sm:text-sm text-slate-600 mt-2 max-w-2xl mx-auto" data-i18n="privacySubtitle">
+                    Detailed disclosures on how customer orders and cryptographic device identifiers are processed.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <!-- Customer Data Handling Card -->
+                <div class="pix-card p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 rounded-lg bg-sky-50 border border-sky-200 border-b-2 border-b-sky-300 flex items-center justify-center text-xl text-sky-600">
+                                👤
+                            </div>
+                            <div>
+                                <span class="pix-chip text-sky-800 bg-sky-50 border-sky-200 border-b-sky-300 text-[10px]" data-i18n="privacyCustomerBadge">Orders & Payments</span>
+                                <h3 class="font-pixel text-base text-slate-900 font-bold" data-i18n="privacyCustomerTitle">Customer Data Handling</h3>
+                            </div>
+                        </div>
+                        <ul class="space-y-3 text-xs text-slate-600 leading-relaxed">
+                            <li class="flex items-start gap-2">
+                                <span class="text-emerald-500 font-bold">✓</span>
+                                <div><strong class="text-slate-800" data-i18n="privacyCust1Bold">Certified Payment Processors:</strong> <span data-i18n="privacyCust1Text">All checkout transactions are managed securely by our Merchant of Record (Creem) and payment partners (Stripe, Apple Pay). We never collect, process, or store credit card numbers, CVVs, or bank details.</span></div>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-emerald-500 font-bold">✓</span>
+                                <div><strong class="text-slate-800" data-i18n="privacyCust2Bold">License Key Delivery:</strong> <span data-i18n="privacyCust2Text">Customer email addresses are collected solely to deliver the 25-character digital license key, dispatch transaction receipts, and assist with order inquiries.</span></div>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-emerald-500 font-bold">✓</span>
+                                <div><strong class="text-slate-800" data-i18n="privacyCust3Bold">No Marketing Spam or Reselling:</strong> <span data-i18n="privacyCust3Text">We do not sell, rent, monetize, or disclose customer email addresses or transaction records to third-party advertisers or data brokers.</span></div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Device Data Handling Card (Specifically flagged by Creem) -->
+                <div class="pix-card p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 rounded-lg bg-emerald-50 border border-emerald-200 border-b-2 border-b-emerald-300 flex items-center justify-center text-xl text-emerald-600">
+                                📱
+                            </div>
+                            <div>
+                                <span class="pix-chip text-emerald-800 bg-emerald-50 border-emerald-200 border-b-emerald-300 text-[10px]" data-i18n="privacyDeviceBadge">Licensing & Anti-Abuse</span>
+                                <h3 class="font-pixel text-base text-slate-900 font-bold" data-i18n="privacyDeviceTitle">Device Data Handling</h3>
+                            </div>
+                        </div>
+                        <ul class="space-y-3 text-xs text-slate-600 leading-relaxed">
+                            <li class="flex items-start gap-2">
+                                <span class="text-emerald-500 font-bold">✓</span>
+                                <div><strong class="text-slate-800" data-i18n="privacyDev1Bold">One-Way Cryptographic Hash:</strong> <span data-i18n="privacyDev1Text">During key validation, our companion utility computes a local, irreversible SHA-256 hash from non-personal system parameters (e.g. system UUID / Android ID). No plain-text hardware serials are stored.</span></div>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-emerald-500 font-bold">✓</span>
+                                <div><strong class="text-slate-800" data-i18n="privacyDev2Bold">Zero Personal Files or Telemetry:</strong> <span data-i18n="privacyDev2Text">We strictly do NOT access, inspect, collect, or transmit photos, contacts, SMS, device files, GPS/geolocation, network browsing data, or microphone/camera feeds.</span></div>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-emerald-500 font-bold">✓</span>
+                                <div><strong class="text-slate-800" data-i18n="privacyDev3Bold">Single-Device Binding Only:</strong> <span data-i18n="privacyDev3Text">The anonymous device hash is used exclusively to verify license seat quotas and prevent unauthorized key cloning or software piracy.</span></div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Retention & Privacy Rights Bar -->
+            <div class="bg-slate-50 border-2 border-slate-200 rounded-xl p-5 text-xs text-slate-600 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div>
+                    <div class="font-pixel text-slate-900 font-bold mb-1" data-i18n="privacyRightsTitle">Data Retention, Security & Your Rights</div>
+                    <p data-i18n="privacyRightsDesc">
+                        License binding records are retained securely only for the duration of the active subscription or perpetual license term. Customers have the complete right to request data inspection, license unbinding, or permanent record deletion at any time by contacting our privacy officer.
+                    </p>
+                </div>
+                <a href="mailto:2864593139@qq.com" class="pix-btn pix-btn-cyan text-xs py-2 px-4 shrink-0 whitespace-nowrap" data-i18n="privacyRightsBtn">
+                    Privacy Support: 2864593139@qq.com
+                </a>
+            </div>
+        </section>
+
     </main>
 
     <!-- Footer & Compliance -->
     <footer id="support" class="bg-white/85 backdrop-blur-md border-t border-slate-200/80 mt-16 py-12 px-6 relative z-10">
-        <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-8 mb-10 text-xs text-slate-600 leading-relaxed">
+        <div class="max-w-6xl mx-auto grid md:grid-cols-4 gap-8 mb-10 text-xs text-slate-600 leading-relaxed">
             <div>
                 <h4 class="font-pixel text-sm text-slate-900 font-bold mb-2" data-i18n="policyTitle">Digital Goods Return Policy</h4>
                 <p data-i18n="policyDesc">
@@ -749,6 +836,15 @@
                 <p data-i18n="termsDesc">
                     FEE Companion is an independent companion utility designed to enhance personal gameplay productivity and experience. Purchasing indicates agreement to operate within local regulations and game environment terms. Continued updates are provided for supported game versions.
                 </p>
+            </div>
+            <div>
+                <h4 class="font-pixel text-sm text-slate-900 font-bold mb-2" data-i18n="privacyFooterTitle">Privacy Policy</h4>
+                <p class="mb-2" data-i18n="privacyFooterDesc">
+                    We strictly protect customer purchase information and device data. Non-PII cryptographic device hashes are used solely for single-device licensing.
+                </p>
+                <a href="#privacy" class="text-sky-600 font-bold hover:underline" data-i18n="privacyFooterLink">
+                    View Full Privacy Policy →
+                </a>
             </div>
             <div>
                 <h4 class="font-pixel text-sm text-slate-900 font-bold mb-2" data-i18n="supportTitle">Support & Contact</h4>
@@ -776,6 +872,7 @@
                 navMuMu: "MuMu Player",
                 navPricing: "Pricing",
                 navGuide: "How to Use",
+                navPrivacy: "Privacy",
                 navSupport: "Support",
                 navGetKey: "Get Key",
                 heroBadge: "FEH COMPATIBLE // 120 FPS IN-GAME MOD",
@@ -831,6 +928,31 @@
                 step2Desc: "Open the game on your phone or PC MuMu Player. Tap the on-screen floating icon to summon the activation window.",
                 step3Title: "Paste Key & Battle",
                 step3Desc: "Paste your 25-digit license key and press activate. Binds in 1 second and unlocks all combat features instantly.",
+                privacyBadge: "Public Compliance Policy",
+                privacySectionTitle: "Privacy Policy & Data Handling",
+                privacySubtitle: "Detailed disclosures on how customer orders and cryptographic device identifiers are processed.",
+                privacyCustomerBadge: "Orders & Payments",
+                privacyCustomerTitle: "Customer Data Handling",
+                privacyCust1Bold: "Certified Payment Processors:",
+                privacyCust1Text: "All checkout transactions are managed securely by our Merchant of Record (Creem) and payment partners (Stripe, Apple Pay). We never collect, process, or store credit card numbers, CVVs, or bank details.",
+                privacyCust2Bold: "License Key Delivery:",
+                privacyCust2Text: "Customer email addresses are collected solely to deliver the 25-character digital license key, dispatch transaction receipts, and assist with order inquiries.",
+                privacyCust3Bold: "No Marketing Spam or Reselling:",
+                privacyCust3Text: "We do not sell, rent, monetize, or disclose customer email addresses or transaction records to third-party advertisers or data brokers.",
+                privacyDeviceBadge: "Licensing & Anti-Abuse",
+                privacyDeviceTitle: "Device Data Handling",
+                privacyDev1Bold: "One-Way Cryptographic Hash:",
+                privacyDev1Text: "During key validation, our companion utility computes a local, irreversible SHA-256 hash from non-personal system parameters (e.g. system UUID / Android ID). No plain-text hardware serials are stored.",
+                privacyDev2Bold: "Zero Personal Files or Telemetry:",
+                privacyDev2Text: "We strictly do NOT access, inspect, collect, or transmit photos, contacts, SMS, device files, GPS/geolocation, network browsing data, or microphone/camera feeds.",
+                privacyDev3Bold: "Single-Device Binding Only:",
+                privacyDev3Text: "The anonymous device hash is used exclusively to verify license seat quotas and prevent unauthorized key cloning or software piracy.",
+                privacyRightsTitle: "Data Retention, Security & Your Rights",
+                privacyRightsDesc: "License binding records are retained securely only for the duration of the active subscription or perpetual license term. Customers have the complete right to request data inspection, license unbinding, or permanent record deletion at any time by contacting our privacy officer.",
+                privacyRightsBtn: "Privacy Support: 2864593139@qq.com",
+                privacyFooterTitle: "Privacy Policy",
+                privacyFooterDesc: "We strictly protect customer purchase information and device data. Non-PII cryptographic device hashes are used solely for single-device licensing.",
+                privacyFooterLink: "View Full Privacy Policy →",
                 policyTitle: "Digital Goods Return Policy",
                 policyDesc: "All license keys are dispatched automatically and immediately upon payment completion. Due to the cryptographic single-device binding nature of digital software, activated keys are non-refundable. If you experience an invalid code, support will replace it immediately.",
                 termsTitle: "Terms of Service",
@@ -847,6 +969,7 @@
                 navMuMu: "MuMu Player",
                 navPricing: "料金プラン",
                 navGuide: "使い方",
+                navPrivacy: "プライバシー",
                 navSupport: "サポート",
                 navGetKey: "キー入手",
                 heroBadge: "FEH 全バージョン対応 // 120 FPS ゲーム内MOD",
@@ -902,6 +1025,31 @@
                 step2Desc: "スマホまたはPCの MuMu Player 上でゲームを起動。画面のフローティングアイコンをタップして認証画面を開きます。",
                 step3Title: "キーを貼付して開始",
                 step3Desc: "25文字のライセンスキーを貼り付けて「認証」を押すだけ。1秒で端末と紐付き、即座に機能が有効化されます。",
+                privacyBadge: "コンプライアンス指針",
+                privacySectionTitle: "プライバシーポリシー＆データ取扱規程",
+                privacySubtitle: "お客様の注文情報および端末識別データの取り扱いに関する明確な開示方針。",
+                privacyCustomerBadge: "注文と決済",
+                privacyCustomerTitle: "顧客データの取り扱い",
+                privacyCust1Bold: "安全な決済処理：",
+                privacyCust1Text: "決済は公式モア（Creem）および Stripe、Apple Pay 等の認証プロバイダを通じて安全に処理されます。クレジットカード番号やセキュリティコードを当サービスが保管・収集することは一切ありません。",
+                privacyCust2Bold: "キー配信と注文確認：",
+                privacyCust2Text: "ご入力いただいたメールアドレスは、25桁のライセンスキーの即時発行、領収書の送付、および注文サポートの提供にのみ利用されます。",
+                privacyCust3Bold: "第三者提供・広告利用の禁止：",
+                privacyCust3Text: "お客様のメールアドレスや購入情報を広告業者や第三者に売却・提供・共有することは一切ありません。",
+                privacyDeviceBadge: "認証と不正防止",
+                privacyDeviceTitle: "端末データの取り扱い",
+                privacyDev1Bold: "不可逆暗号化ハッシュ（SHA-256）：",
+                privacyDev1Text: "キー認証時、端末内の非個人情報（システムUUID / Android ID等）から端末側で不可逆な SHA-256 ハッシュ値を生成します。平文のハードウェア固有番号は送信・保存されません。",
+                privacyDev2Bold: "個人ファイル・追跡の完全排除：",
+                privacyDev2Text: "端末内の写真、連絡先、SMS、個人ファイル、位置情報（GPS）、ブラウザ履歴等を収集・監視・転送することは一切ありません。",
+                privacyDev3Bold: "1端末認証制限の目的限定：",
+                privacyDev3Text: "暗号化ハッシュ値は、購入されたライセンスキーの1端末同時利用制限および不正複製防止の検証にのみ厳格に限定して使用されます。",
+                privacyRightsTitle: "データ保持期間・セキュリティ・開示請求権",
+                privacyRightsDesc: "認証データはライセンス有効期間中のみ厳重に保護・保持されます。お客様はいつでもサポート窓口に連絡し、認証解除や登録データの完全消去を請求できます。",
+                privacyRightsBtn: "プライバシー窓口：2864593139@qq.com",
+                privacyFooterTitle: "プライバシーポリシー",
+                privacyFooterDesc: "お客様の個人情報と端末情報を厳重に保護。端末データは1端末ライセンス認証用の不可逆ハッシュのみに限定して取り扱われます。",
+                privacyFooterLink: "プライバシーポリシー全文 →",
                 policyTitle: "デジタル商品返金ポリシー",
                 policyDesc: "すべてのライセンスキーは決済完了後すぐに自動発行されます。暗号化された端末紐付け型デジタル商品という性質上、認証後の返金は原則不可となります。万一認証エラー等が発生した場合は技術サポートにて迅速に再発行対応いたします。",
                 termsTitle: "利用規約",
@@ -918,6 +1066,7 @@
                 navMuMu: "MuMu 模擬器",
                 navPricing: "價格方案",
                 navGuide: "使用說明",
+                navPrivacy: "隱私政策",
                 navSupport: "技術支援",
                 navGetKey: "獲取卡密",
                 heroBadge: "FEH 全版本支援 // 120 FPS 遊戲內 MOD",
@@ -973,6 +1122,31 @@
                 step2Desc: "在手機或電腦 MuMu 模擬器中打開遊戲。點擊畫面上的懸浮圖示，即可喚出授權啟用視窗。",
                 step3Title: "貼上卡密立即開戰",
                 step3Desc: "將 25 位卡密貼入框中並點擊「啟用」，1 秒鐘內自動綁定設備並啟動全部功能。",
+                privacyBadge: "公開合規政策",
+                privacySectionTitle: "隱私政策與數據處理規範",
+                privacySubtitle: "詳細說明顧客訂單資訊及設備識別數據的收集、處理與安全防護措施。",
+                privacyCustomerBadge: "訂單與付款",
+                privacyCustomerTitle: "顧客數據處理",
+                privacyCust1Bold: "安全加密付款：",
+                privacyCust1Text: "所有線上交易均由名義商戶（Creem）及國際支付機構（Stripe、Apple Pay）以銀行級加密處理。我們絕不存儲亦無法接觸您的完整信用卡號、安全碼等敏感資訊。",
+                privacyCust2Bold: "卡密發送與售後：",
+                privacyCust2Text: "顧客提供的電子郵件僅用於發送 25 位數位授權卡密、交易憑據收據及必要之客服技術支援。",
+                privacyCust3Bold: "絕不販售或推播廣告：",
+                privacyCust3Text: "我們嚴格承諾絕不向任何第三方廣告商販售、出租或透露顧客的任何個人資訊或購買紀錄。",
+                privacyDeviceBadge: "授權與防盜",
+                privacyDeviceTitle: "設備數據處理",
+                privacyDev1Bold: "單向不可逆雜湊（SHA-256）：",
+                privacyDev1Text: "在客戶端啟用卡密時，系統會在本地提取非個人系統參數（如系統 UUID / Android ID）生成 SHA-256 單向雜湊摘要。絕不傳輸或存儲明文硬體序列號。",
+                privacyDev2Bold: "零個人隱私存取：",
+                privacyDev2Text: "輔助程式嚴格禁止且絕不存取、掃描、監控或上傳您的照片、通訊錄、簡訊、個人檔案、GPS 定位或瀏覽紀錄。",
+                privacyDev3Bold: "僅用於一機一碼綁定：",
+                privacyDev3Text: "匿名設備雜湊僅嚴格用於驗證授權的一機一碼配額，防止卡密被非法複製或盜用。",
+                privacyRightsTitle: "數據保存期限與用戶權益",
+                privacyRightsDesc: "設備授權綁定紀錄僅在卡密有效期限或終身保固期間內安全存儲。用戶有權隨時透過客服信箱申請解綁或永久註銷刪除相關數據記錄。",
+                privacyRightsBtn: "隱私諮詢信箱：2864593139@qq.com",
+                privacyFooterTitle: "隱私政策",
+                privacyFooterDesc: "我們嚴格守護顧客訂購資訊與設備隱私。設備識別僅採單向加密雜湊進行一機一碼卡密校驗，絕不採集任何個人隱私數據。",
+                privacyFooterLink: "查閱完整數據隱私規範 →",
                 policyTitle: "數位虛擬商品退款協議",
                 policyDesc: "所有授權卡密均在付款成功後系統立即自動發放。由於數位卡密採用加密單一設備綁定機制，一旦啟用即可不可逆，因此卡密售出啟用後不予退款。若遇卡密校驗異常，技術客服將立即為您補發或更換有效卡密。",
                 termsTitle: "服務使用條款",
@@ -989,6 +1163,7 @@
                 navMuMu: "MuMu 模拟器",
                 navPricing: "价格套餐",
                 navGuide: "使用说明",
+                navPrivacy: "隐私政策",
                 navSupport: "技术支持",
                 navGetKey: "获取卡密",
                 heroBadge: "FEH 全版本支持 // 120 FPS 游戏内 MOD",
@@ -1044,6 +1219,31 @@
                 step2Desc: "在手机或电脑 MuMu 模拟器中打开游戏。点击画面上的悬浮图标，即可唤出授权激活窗口。",
                 step3Title: "粘贴卡密立即开战",
                 step3Desc: "将 25 位卡密贴入框中并点击「激活」，1 秒钟内自动绑定设备并启动全部功能。",
+                privacyBadge: "公开合规政策",
+                privacySectionTitle: "隐私政策与数据处理规范",
+                privacySubtitle: "公开透明阐述顾客订单信息与设备识别数据的收集、处理及安全防护准则。",
+                privacyCustomerBadge: "订单与支付",
+                privacyCustomerTitle: "顾客数据处理",
+                privacyCust1Bold: "安全加密支付：",
+                privacyCust1Text: "所有线上交易均由名义商户（Creem）及持牌国际支付网关（Stripe、Apple Pay）通过金融级加密通道完成。我们绝不收集、处理或存储您的银行卡号、CVV安全码等敏感财务信息。",
+                privacyCust2Bold: "卡密发放与凭证：",
+                privacyCust2Text: "顾客填写的电子邮箱仅用于自动发放 25 位数字授权卡密、推送订单收据凭据以及处理必要的售后技术支持。",
+                privacyCust3Bold: "严禁商业转售或骚扰：",
+                privacyCust3Text: "我们承诺绝不向任何第三方数据经纪商或广告联盟出售、出租或分享顾客的个人联系信息与交易记录。",
+                privacyDeviceBadge: "授权与防盗",
+                privacyDeviceTitle: "设备数据处理",
+                privacyDev1Bold: "单向加密哈希（SHA-256）：",
+                privacyDev1Text: "在客户端激活卡密时，仅在本地提取非个人硬件参数（如系统 UUID / Android ID）计算单向 SHA-256 哈希值。绝不上报或存储明文硬件序列号。",
+                privacyDev2Bold: "零个人隐私读取：",
+                privacyDev2Text: "辅助工具严禁且绝不读取、收集、监听或上传您的相册、通讯录、短信、个人文件、GPS地理位置、浏览器历史或非相关应用数据。",
+                privacyDev3Bold: "仅用于一机一码授权：",
+                privacyDev3Text: "生成的匿名设备哈希唯一用于校验单一设备授权配额，防止卡密被非法倒卖或恶意多设备滥用。",
+                privacyRightsTitle: "数据存储周期与用户权利",
+                privacyRightsDesc: "设备绑定数据仅在卡密有效期或终身质保期内安全存储。用户随时有权通过官方客服邮箱申请查看、换绑或彻底销毁删除相关的设备哈希与订单记录。",
+                privacyRightsBtn: "隐私与数据支持：2864593139@qq.com",
+                privacyFooterTitle: "隐私政策",
+                privacyFooterDesc: "我们严格保护顾客个人信息与设备安全。设备标识仅通过单向哈希用于一机一码授权校验，绝不收集任何个人隐私数据。",
+                privacyFooterLink: "查看完整数据隐私规范 →",
                 policyTitle: "数字虚拟商品退款协议",
                 policyDesc: "所有授权卡密均在付款成功后系统立即自动发放。由于数字卡密采用加密单一设备绑定机制，一旦激活即可不可逆，因此卡密售出激活后不予退款。若遇卡密校验异常，技术客服将立即为您补发或更换有效卡密。",
                 termsTitle: "服务使用条款",
