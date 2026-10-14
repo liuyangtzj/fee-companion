@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fire Emblem Heroes MOD — In-Game Combat Menu</title>
+    <meta name="description" content="In-game floating combat MOD menu for Fire Emblem Heroes (FEH). Features damage multiplier, god mode, and freeze enemy turns.">
+    <!-- Google Fonts: Pixelify Sans (Toy Pixel) + Outfit (Modern Body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Pixelify+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --card-border: #cbd5e1;
+            --card-bevel: #94a3b8;
+        }
+
+        body {
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 40%, #f1f5f9 100%);
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: #334155;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: clip;
+        }
+
+        /* ========================================================
+           HutaoCards Layered Dynamic Motion Background
+           ======================================================== */
+        .bg-layer-container {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-grid-texture {
+            position: absolute;
+            inset: 0;
+            background-image: repeating-linear-gradient(45deg, #0f172a 0, #0f172a 1px, transparent 0, transparent 50%);
+            background-size: 10px 10px;
+            opacity: 0.022;
+        }
+
+        /* Ambient Glowing Light Orbs */
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.35;
+            pointer-events: none;
+        }
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(186, 230, 253, 0.55), transparent 70%);
+            top: -8%;
+            left: -6%;
+            animation: pulse-orb 8s ease-in-out infinite;
+        }
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(224, 231, 255, 0.5), transparent 70%);
+            bottom: -10%;
+            right: -6%;
+            animation: pulse-orb 10s ease-in-out infinite reverse;
+        }
+        .orb-3 {
+            width: 440px;
+            height: 440px;
+            background: radial-gradient(circle, rgba(254, 243, 199, 0.4), transparent 70%);
+            top: 42%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulse-orb 13s ease-in-out infinite;
+        }
+
+        @keyframes pulse-orb {
+            0%, 100% {
+                opacity: 0.25;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.48;
+                transform: scale(1.12);
+            }
+        }
+
+        /* Dynamic Floating Frosted Glass Cards (HutaoCards Style) */
+        .floating-card {
+            position: absolute;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.85), rgba(241, 245, 249, 0.52));
+            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(12px);
+            border-radius: 16px;
+            border: 1px solid rgba(226, 232, 240, 0.85);
+            box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.05), inset 0 1px 1px rgba(255, 255, 255, 0.85);
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        /* Subtle Card Inner Details (Chip / Magnetic Accents) */
+        .floating-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.05) 50%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .floating-card::after {
+            content: '';
+            position: absolute;
+            top: 14px;
+            left: 16px;
+            width: 26px;
+            height: 18px;
+            border-radius: 4px;
+            background: linear-gradient(135deg, rgba(203, 213, 225, 0.45), rgba(241, 245, 249, 0.2));
+            border: 1px solid rgba(203, 213, 225, 0.5);
+            box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.6);
+        }
+
+        .card-1 {
+            top: 8%;
+            left: 5%;
+            width: 210px;
+            height: 135px;
+            animation: float-card-1 15s ease-in-out infinite;
+        }
+        .card-2 {
+            top: 18%;
+            right: 6%;
+            width: 190px;
+            height: 120px;
+            animation: float-card-2 18s ease-in-out infinite;
+        }
+        .card-3 {
+            top: 45%;
+            left: 4%;
+            width: 175px;
+            height: 110px;
+            animation: float-card-3 20s ease-in-out infinite;
+        }
+        .card-4 {
+            top: 55%;
+            right: 5%;
+            width: 220px;
+            height: 140px;
+            animation: float-card-4 16s ease-in-out infinite;
+        }
+        .card-5 {
+            top: 76%;
+            left: 6%;
+            width: 195px;
+            height: 125px;
+            animation: float-card-2 22s ease-in-out infinite reverse;
+        }
+        .card-6 {
+            top: 84%;
+            right: 8%;
+            width: 180px;
+            height: 115px;
+            animation: float-card-1 19s ease-in-out infinite reverse;
+        }
+
+        /* 3D Floating Keyframes from HutaoCards */
+        @keyframes float-card-1 {
+            0%, 100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            25% {
+                transform: translate(22px, -28px) rotate(3deg);
+            }
+            50% {
+                transform: translate(-16px, -18px) rotate(-2deg);
+            }
+            75% {
+                transform: translate(12px, -36px) rotate(2deg);
+            }
+        }
+
+        @keyframes float-card-2 {
+            0%, 100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            33% {
+                transform: translate(-26px, 28px) rotate(-4deg);
+            }
+            66% {
+                transform: translate(22px, 16px) rotate(3deg);
+            }
+        }
+
+        @keyframes float-card-3 {
+            0%, 100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            30% {
+                transform: translate(28px, 22px) rotate(4deg);
+            }
+            70% {
+                transform: translate(-22px, -16px) rotate(-3deg);
+            }
+        }
+
+        @keyframes float-card-4 {
+            0%, 100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            40% {
+                transform: translate(-28px, -24px) rotate(-4deg);
+            }
+            80% {
+                transform: translate(16px, 18px) rotate(3deg);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .floating-card {
+                width: 125px !important;
+                height: 80px !important;
+                border-radius: 10px !important;
+            }
+            .floating-card::after {
+                width: 18px;
+                height: 12px;
+                top: 8px;
+                left: 10px;
+            }
+            .card-2, .card-4, .card-6 {
+                display: none;
+            }
+            .glow-orb {
+                filter: blur(45px);
+                opacity: 0.22;
+            }
+        }
+
+        .font-pixel {
+            font-family: 'Pixelify Sans', cursive;
+            letter-spacing: 0.02em;
+        }
+
+        /* Solid Toy-Block Physical Cards */
+        .pix-card {
+            background-color: var(--card-bg);
+            border: 2px solid var(--card-border);
+            border-bottom: 5px solid var(--card-bevel);
+            border-radius: 14px;
+            box-shadow: 0 4px 0 #cbd5e1;
+            transition: transform 0.08s ease, box-shadow 0.08s ease;
+        }
+        .pix-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #cbd5e1;
+        }
+
+        .pix-card-featured {
+            background-color: #ffffff;
+            border: 2px solid #f59e0b;
+            border-bottom: 6px solid #d97706;
+            border-radius: 14px;
+            box-shadow: 0 4px 0 #fde68a;
+            transition: transform 0.08s ease;
+        }
+        .pix-card-featured:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 0 #fde68a;
+        }
+
+        /* Solid Toy Tactile Buttons */
+        .pix-btn {
+            font-family: 'Pixelify Sans', cursive;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            border-radius: 10px;
+            padding: 10px 20px;
+            transition: transform 0.06s ease, border-bottom-width 0.06s ease;
+            user-select: none;
+            cursor: pointer;
+            box-shadow: 0 3px 0 rgba(15, 23, 42, 0.12);
+        }
+        .pix-btn:active {
+            transform: translateY(3px);
+            border-bottom-width: 1px;
+            box-shadow: 0 0 0 transparent;
+        }
+
+        .pix-btn-cyan {
+            background-color: #0284c7;
+            color: #ffffff;
+            border: 1px solid #38bdf8;
+            border-bottom: 4px solid #0369a1;
+        }
+        .pix-btn-cyan:hover {
+            background-color: #0369a1;
+        }
+
+        .pix-btn-green {
+            background-color: #059669;
+            color: #ffffff;
+            border: 1px solid #34d399;
+            border-bottom: 4px solid #065f46;
+        }
+        .pix-btn-green:hover {
+            background-color: #047857;
+        }
+
+        .pix-btn-gold {
+            background-color: #d97706;
+            color: #ffffff;
+            border: 1px solid #fbbf24;
+            border-bottom: 4px solid #92400e;
+        }
+        .pix-btn-gold:hover {
+            background-color: #b45309;
+        }
+
+        .pix-btn-dark {
+            background-color: #0f172a;
+            color: #ffffff;
+            border: 1px solid #334155;
+            border-bottom: 4px solid #020617;
+        }
+        .pix-btn-dark:hover {
+            background-color: #1e293b;
+        }
+
+        /* Solid Toy Chips & Badges */
+        .pix-chip {
+            font-family: 'Pixelify Sans', cursive;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 9px;
+            border-radius: 6px;
+            background-color: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-bottom: 2px solid #94a3b8;
+            letter-spacing: 0.02em;
+            color: #334155;
+        }
+
+        /* ========================================================
+           Floating Tactile Island Navigation Bar (Static Top)
+           ======================================================== */
+        .pix-navbar {
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        /* FEH Pass Chibi Sprite Idle Animation & Hover */
+        @keyframes feh-chibi-idle {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-4px) rotate(-1.5deg);
+            }
+        }
+        .feh-chibi {
+            animation: feh-chibi-idle 3s ease-in-out infinite;
+            filter: drop-shadow(0 4px 6px rgba(15, 23, 42, 0.18));
+            transform-origin: bottom center;
+        }
+        .group:hover .feh-chibi {
+            animation-play-state: paused;
+            transform: translateY(-5px) scale(1.15) rotate(2deg);
+            filter: drop-shadow(0 6px 12px rgba(2, 132, 199, 0.35));
+        }
+
+
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between relative selection:bg-sky-100 selection:text-sky-800">
+
+    <!-- HutaoCards Layered Dynamic Motion Background -->
+    <div class="bg-layer-container">
+        <!-- Tactile Micro Diagonal Texture -->
+        <div class="bg-grid-texture"></div>
+
+        <!-- Ambient Glowing Orbs -->
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+        <div class="glow-orb orb-3"></div>
+
+        <!-- Dynamic Floating Frosted Glass Cards (方块运动) -->
+        <div class="floating-card card-1"></div>
+        <div class="floating-card card-2"></div>
+        <div class="floating-card card-3"></div>
+        <div class="floating-card card-4"></div>
+        <div class="floating-card card-5"></div>
+        <div class="floating-card card-6"></div>
+    </div>
+
+    <!-- Fixed Top Navigation Bar (Slides up at 1/3 scroll, restores on return to top) -->
+    <header id="main-header" class="fixed top-0 left-0 right-0 w-full z-50 bg-white/90 backdrop-blur-md border-b-2 border-slate-200 shadow-sm transition-transform duration-300 ease-in-out">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-2.5 sm:py-3 flex justify-between items-center gap-3 sm:gap-4">
+            
+            <!-- Left: Mascot Chibi & Brand Wordmark -->
+            <a href="#" class="flex items-center gap-3 group text-decoration-none">
+                <!-- Chibi Mascot (Clean Standalone) -->
+                <div class="relative flex items-center justify-center shrink-0">
+                    <img src="https://fehpass.fire-emblem-heroes.com/common/img/top_mini_chara_00069001000012.png?time=1790245736057" 
+                         alt="FEH Chibi Lucina" 
+                         class="feh-chibi h-11 sm:h-12 w-auto select-none pointer-events-none transition-all duration-300"
+                         onerror="this.src='feh_chibi.png'">
+                </div>
+
+                <!-- Brand Wordmark (Clean & Solid) -->
+                <div class="flex flex-col justify-center select-none">
+                    <div class="font-pixel text-xl sm:text-2xl text-slate-900 font-bold leading-none flex items-center">
+                        <span>FEE</span>
+                        <span class="text-sky-600 mx-1.5 font-mono font-bold text-lg select-none">\</span>
+                        <span>Companion</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 text-[10px] sm:text-[11px] font-mono font-medium text-slate-500 tracking-wider">
+                        <span>FIRE EMBLEM HEROES MOD</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Center Navigation Links (Pill Style) -->
+            <nav class="hidden md:flex items-center gap-1 text-xs font-bold text-slate-600">
+                <a href="#mod" class="px-3 py-1.5 rounded-xl hover:bg-slate-100/90 hover:text-sky-600 transition" data-i18n="navMod">Mod Features</a>
+                <a href="#emulator" class="px-3 py-1.5 rounded-xl hover:bg-emerald-50 text-emerald-600 hover:text-emerald-700 transition flex items-center gap-1.5 font-bold">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span data-i18n="navMuMu">MuMu Player</span>
+                </a>
+                <a href="#pricing" class="px-3 py-1.5 rounded-xl hover:bg-amber-50 hover:text-amber-600 transition" data-i18n="navPricing">Pricing</a>
+                <a href="#guide" class="px-3 py-1.5 rounded-xl hover:bg-slate-100/90 hover:text-sky-600 transition" data-i18n="navGuide">How to Use</a>
+                <a href="#support" class="px-3 py-1.5 rounded-xl hover:bg-slate-100/90 hover:text-sky-600 transition" data-i18n="navSupport">Support</a>
+            </nav>
+
+            <!-- Right: Language Dropdown + CTA Button -->
+            <div class="flex items-center gap-2.5 sm:gap-3">
+                <!-- Language Selector Dropdown (EN / JA / ZH-TW / ZH-CN) -->
+                <div class="relative inline-block text-left" id="lang-dropdown-wrapper">
+                    <button id="lang-btn" type="button" class="pix-btn bg-white text-slate-700 border border-slate-300 border-b-2 border-b-slate-400 py-1.5 px-2.5 sm:px-3 text-xs flex items-center gap-1.5 hover:bg-slate-50 shadow-sm">
+                        <span id="lang-cur-flag">🌐</span>
+                        <span id="lang-cur-text">English</span>
+                        <svg class="w-3 h-3 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div id="lang-menu" class="hidden absolute right-0 mt-2 w-36 rounded-lg bg-white border-2 border-slate-200 border-b-4 border-b-slate-300 shadow-xl z-50 overflow-hidden py-1">
+                        <button onclick="setLang('en')" class="w-full text-left px-4 py-2 text-xs hover:bg-slate-50 transition flex items-center justify-between text-slate-700 font-medium">
+                            <span>English</span> <span class="text-[10px] text-slate-400 font-mono">EN</span>
+                        </button>
+                        <button onclick="setLang('ja')" class="w-full text-left px-4 py-2 text-xs hover:bg-slate-50 transition flex items-center justify-between text-slate-700 font-medium">
+                            <span>日本語</span> <span class="text-[10px] text-slate-400 font-mono">JA</span>
+                        </button>
+                        <button onclick="setLang('zh-TW')" class="w-full text-left px-4 py-2 text-xs hover:bg-slate-50 transition flex items-center justify-between text-slate-700 font-medium">
+                            <span>繁體中文</span> <span class="text-[10px] text-slate-400 font-mono">繁體</span>
+                        </button>
+                        <button onclick="setLang('zh-CN')" class="w-full text-left px-4 py-2 text-xs hover:bg-slate-50 transition flex items-center justify-between text-slate-700 font-medium">
+                            <span>简体中文</span> <span class="text-[10px] text-slate-400 font-mono">简体</span>
+                        </button>
+                    </div>
+                </div>
+
+                <a href="#pricing" class="pix-btn pix-btn-cyan py-1.5 px-3 sm:px-4 text-xs" data-i18n="navGetKey">
+                    Get Key
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow relative z-10 pt-20 sm:pt-24">
+        <!-- Hero Section -->
+        <section class="max-w-4xl mx-auto pt-14 pb-12 px-6 text-center">
+            
+            
+            <h1 class="font-pixel text-4xl sm:text-5xl md:text-6xl text-slate-900 font-bold leading-tight tracking-tight mb-8" data-i18n-html="heroTitleHtml">
+                Fire Emblem Heroes <br>
+                <span class="text-sky-600">Companion MOD</span>
+            </h1>
+
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="#pricing" class="pix-btn pix-btn-cyan text-sm" data-i18n="heroBtnPricing">
+                    PRICING
+                </a>
+                <a href="#emulator" class="pix-btn pix-btn-green text-sm" data-i18n="heroBtnMuMu">
+                    🎮 Recommended: MuMu Player
+                </a>
+            </div>
+        </section>
+
+        <!-- Mod Capabilities Section -->
+        <section id="mod" class="max-w-5xl mx-auto py-10 px-6">
+            <div class="text-center mb-10">
+                <h2 class="font-pixel text-2xl sm:text-3xl text-slate-900 font-bold" data-i18n="modTitle">Fire Emblem Heroes MOD Features</h2>
+                <p class="text-sm text-slate-600 mt-2" data-i18n="modSubtitle">Custom combat modifications and convenience toggles controlled directly via our floating HUD.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Mod 1: Damage Multiplier -->
+                <div class="pix-card p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="w-10 h-10 rounded-lg bg-amber-50 border border-amber-200 border-b-2 border-b-amber-300 flex items-center justify-center text-xl mb-4 text-amber-600">
+                            ⚔️
+                        </div>
+                        <span class="pix-chip text-amber-800 bg-amber-50 border-amber-200 border-b-amber-300 mb-3 inline-block" data-i18n="mod1Pill">1x ~ 999x</span>
+                        <h3 class="font-pixel text-lg text-slate-900 mb-2" data-i18n="mod1Title">Damage Multiplier</h3>
+                        <p class="text-xs text-slate-600 leading-relaxed" data-i18n="mod1Desc">
+                            Freely scale your attack power with an interactive in-game slider from 1x up to 999x. One-hit clear high-difficulty stages, trials, and grind maps in seconds.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Mod 2: God Mode (Damage Taken = 0) -->
+                <div class="pix-card p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="w-10 h-10 rounded-lg bg-sky-50 border border-sky-200 border-b-2 border-b-sky-300 flex items-center justify-center text-xl mb-4 text-sky-600">
+                            🛡️
+                        </div>
+                        <span class="pix-chip text-sky-800 bg-sky-50 border-sky-200 border-b-sky-300 mb-3 inline-block" data-i18n="mod2Pill">God Mode</span>
+                        <h3 class="font-pixel text-lg text-slate-900 mb-2" data-i18n="mod2Title">God Mode (Enemy Dmg = 0)</h3>
+                        <p class="text-xs text-slate-600 leading-relaxed" data-i18n="mod2Desc">
+                            Sets all incoming regular, special, and counter damage from enemies to zero. Keeps your entire formation safe with zero casualties.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Mod 3: Freeze Enemy Turns -->
+                <div class="pix-card p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="w-10 h-10 rounded-lg bg-blue-50 border border-blue-200 border-b-2 border-blue-300 flex items-center justify-center text-xl mb-4 text-blue-600">
+                            ❄️
+                        </div>
+                        <span class="pix-chip text-blue-800 bg-blue-50 border-blue-200 border-b-blue-300 mb-3 inline-block" data-i18n="mod3Pill">Freeze Turn</span>
+                        <h3 class="font-pixel text-lg text-slate-900 mb-2" data-i18n="mod3Title">Freeze Enemy Attacks</h3>
+                        <p class="text-xs text-slate-600 leading-relaxed" data-i18n="mod3Desc">
+                            Directly suppresses and freezes hostile turns and counter-attacks. No incoming threats, allowing total mastery over the battlefield.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recommended Environment: MuMu Player Section -->
+        <section id="emulator" class="max-w-5xl mx-auto py-8 px-6">
+            <div class="pix-card p-8">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-8">
+                    <div class="flex-1">
+                        <div class="inline-flex items-center gap-2 pix-chip text-emerald-800 bg-emerald-50 border-emerald-200 border-b-emerald-300 mb-4">
+                            🎮 <span data-i18n="mumuBadge">PC / Mac Recommended</span>
+                        </div>
+                        <h2 class="font-pixel text-2xl sm:text-3xl text-slate-900 font-bold mb-3" data-i18n="mumuTitle">
+                            Recommended Environment: MuMu Player
+                        </h2>
+                        <p class="text-sm text-slate-600 leading-relaxed mb-6" data-i18n-html="mumuDescHtml">
+                            For desktop gamers, we recommend running on <strong class="text-slate-900 font-semibold">MuMu Player</strong>. Fully tested for smooth floating HUD rendering, keymapping, and 120 FPS high refresh rate.
+                        </p>
+                        <div class="flex flex-wrap gap-4 text-xs text-slate-700 font-medium">
+                            <span class="flex items-center gap-1.5"><span class="text-emerald-500 font-bold">✓</span> <span data-i18n="mumuFeature1">Floating HUD Native Support</span></span>
+                            <span class="flex items-center gap-1.5"><span class="text-emerald-500 font-bold">✓</span> <span data-i18n="mumuFeature2">120 FPS High Refresh Rate</span></span>
+                            <span class="flex items-center gap-1.5"><span class="text-emerald-500 font-bold">✓</span> <span data-i18n="mumuFeature3">Windows & Mac Compatible</span></span>
+                        </div>
+                    </div>
+                    <div class="w-full md:w-72 bg-slate-50 border-2 border-slate-200 rounded-xl p-5 text-center flex flex-col items-center">
+                        <div class="text-3xl mb-2">💻</div>
+                        <div class="font-pixel text-base text-slate-900 font-bold mb-1" data-i18n="mumuBoxTitle">MuMu Player</div>
+                        <p class="text-[11px] text-slate-500 mb-4" data-i18n="mumuBoxSub">Official Installer (Win / Mac)</p>
+                        <a href="https://mumuemulator.com/en/download/" target="_blank" rel="noopener noreferrer" class="pix-btn pix-btn-green w-full text-xs py-2 mb-2" data-i18n="mumuBoxBtn">
+                            Download MuMu Player →
+                        </a>
+                        <p class="text-[10px] text-slate-400" data-i18n-html="mumuBoxFooterHtml">
+                            Official site: <a href="https://mumuemulator.com/en/download/" target="_blank" rel="noopener noreferrer" class="text-sky-600 hover:underline">mumuemulator.com</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+        <section id="pricing" class="max-w-6xl mx-auto py-12 px-6">
+            <div class="text-center mb-12">
+                <h2 class="font-pixel text-3xl sm:text-4xl text-slate-900 font-bold" data-i18n="pricingTitle">PRICING</h2>
+                <p class="text-sm text-slate-600 mt-2" data-i18n="pricingSubtitle">Instant digital delivery 24/7. License key displayed immediately upon checkout.</p>
+            </div>
+
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                
+                <!-- Plan 1: 1 Day Pass -->
+                <div class="pix-card p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="pix-chip text-slate-700 bg-slate-50 border-slate-200 border-b-slate-300" data-i18n="plan1Pill">24 Hours</span>
+                        </div>
+                        <h3 class="font-pixel text-lg text-slate-900 font-bold mb-2" data-i18n="plan1Title">1-Day Trial Pass</h3>
+                        <div class="mb-4">
+                            <span class="font-pixel text-3xl text-slate-900 font-bold">$1.49</span>
+                        </div>
+                        <p class="text-xs text-slate-600 leading-relaxed mb-6" data-i18n="plan1Desc">
+                            Instant 24-hour access with full functionality. Ideal for weekend trial testing and quick stage clears.
+                        </p>
+                    </div>
+                    <div>
+                        <div class="text-center text-[11px] text-slate-600 mb-3 bg-slate-50 rounded py-1.5 border border-slate-200" data-i18n="badgeInstant">
+                            ✓ Instant Digital Delivery
+                        </div>
+                        <a href="#support" class="pix-btn pix-btn-dark w-full text-xs py-2" data-i18n="plan1Btn">
+                            Get 1-Day Key
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Plan 2: 7 Day Pass -->
+                <div class="pix-card p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="pix-chip text-sky-800 bg-sky-50 border-sky-200 border-b-sky-300" data-i18n="plan2Pill">7 Days</span>
+                        </div>
+                        <h3 class="font-pixel text-lg text-slate-900 font-bold mb-2" data-i18n="plan2Title">7-Day Weekly Pass</h3>
+                        <div class="mb-4">
+                            <span class="font-pixel text-3xl text-slate-900 font-bold">$4.99</span>
+                        </div>
+                        <p class="text-xs text-slate-600 leading-relaxed mb-6" data-i18n="plan2Desc">
+                            Covers a full Arena competition week and team event cycle. Enjoy unlimited quick farming for 7 days.
+                        </p>
+                    </div>
+                    <div>
+                        <div class="text-center text-[11px] text-slate-600 mb-3 bg-slate-50 rounded py-1.5 border border-slate-200" data-i18n="badgeInstant">
+                            ✓ Instant Digital Delivery
+                        </div>
+                        <a href="#support" class="pix-btn pix-btn-dark w-full text-xs py-2" data-i18n="plan2Btn">
+                            Get 7-Day Key
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Plan 3: 30 Day Monthly Pass (Featured) -->
+                <div class="pix-card-featured p-6 flex flex-col justify-between relative">
+                    <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-amber-500 text-white font-pixel text-xs px-3 py-0.5 rounded-full font-bold shadow-sm" data-i18n="plan3Badge">
+                        ★ MOST POPULAR
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-center mb-4 mt-1">
+                            <span class="pix-chip text-amber-800 bg-amber-50 border-amber-200 border-b-amber-300" data-i18n="plan3Pill">30 Days</span>
+                        </div>
+                        <h3 class="font-pixel text-lg text-slate-900 font-bold mb-2" data-i18n="plan3Title">30-Day Monthly Pass</h3>
+                        <div class="mb-4">
+                            <span class="font-pixel text-3xl text-amber-600 font-bold">$9.99</span>
+                        </div>
+                        <p class="text-xs text-slate-600 leading-relaxed mb-6" data-i18n="plan3Desc">
+                            Matches the official monthly pass update cycle. Best cost-performance with ongoing game version adaptation.
+                        </p>
+                    </div>
+                    <div>
+                        <div class="text-center text-[11px] text-amber-900 mb-3 bg-amber-50 rounded py-1.5 border border-amber-200 font-medium" data-i18n="badgeInstant">
+                            ✓ Instant Digital Delivery
+                        </div>
+                        <a href="#support" class="pix-btn pix-btn-gold w-full text-xs py-2" data-i18n="plan3Btn">
+                            Get 30-Day Key
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Plan 4: Lifetime License -->
+                <div class="pix-card p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="pix-chip text-purple-800 bg-purple-50 border-purple-200 border-b-purple-300" data-i18n="plan4Pill">Lifetime</span>
+                        </div>
+                        <h3 class="font-pixel text-lg text-slate-900 font-bold mb-2" data-i18n="plan4Title">Lifetime License</h3>
+                        <div class="mb-4">
+                            <span class="font-pixel text-3xl text-purple-700 font-bold">$39.99</span>
+                        </div>
+                        <p class="text-xs text-slate-600 leading-relaxed mb-6" data-i18n="plan4Desc">
+                            One-time purchase for perpetual device usage. Zero recurring subscription costs, prime choice for dedicated summoners.
+                        </p>
+                    </div>
+                    <div>
+                        <div class="text-center text-[11px] text-slate-600 mb-3 bg-slate-50 rounded py-1.5 border border-slate-200" data-i18n="badgeInstant">
+                            ✓ Instant Digital Delivery
+                        </div>
+                        <a href="#support" class="pix-btn pix-btn-dark w-full text-xs py-2" data-i18n="plan4Btn">
+                            Get Lifetime Key
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 3-Step Setup Guide -->
+        <section id="guide" class="max-w-4xl mx-auto py-8 px-6">
+            <div class="text-center mb-8">
+                <h2 class="font-pixel text-2xl text-slate-900 font-bold" data-i18n="guideTitle">Quick 3-Step Activation</h2>
+                <p class="text-xs text-slate-500 mt-1" data-i18n="guideSubtitle">From purchase to in-game deployment in under 2 minutes.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-4">
+                <div class="pix-card p-5 text-center">
+                    <div class="w-8 h-8 rounded-lg bg-sky-500 text-white font-pixel font-bold flex items-center justify-center mx-auto mb-3 text-sm">
+                        1
+                    </div>
+                    <h3 class="font-pixel text-sm text-slate-900 font-bold mb-1" data-i18n="step1Title">Select License Plan</h3>
+                    <p class="text-[11px] text-slate-600 leading-relaxed" data-i18n="step1Desc">
+                        Checkout securely via Credit Card or Apple Pay. Your 25-character key is displayed instantly on-screen and emailed.
+                    </p>
+                </div>
+                <div class="pix-card p-5 text-center">
+                    <div class="w-8 h-8 rounded-lg bg-emerald-500 text-white font-pixel font-bold flex items-center justify-center mx-auto mb-3 text-sm">
+                        2
+                    </div>
+                    <h3 class="font-pixel text-sm text-slate-900 font-bold mb-1" data-i18n="step2Title">Launch on Device</h3>
+                    <p class="text-[11px] text-slate-600 leading-relaxed" data-i18n="step2Desc">
+                        Open the game on your phone or PC MuMu Player. Tap the on-screen floating icon to summon the activation window.
+                    </p>
+                </div>
+                <div class="pix-card p-5 text-center">
+                    <div class="w-8 h-8 rounded-lg bg-amber-500 text-white font-pixel font-bold flex items-center justify-center mx-auto mb-3 text-sm">
+                        3
+                    </div>
+                    <h3 class="font-pixel text-sm text-slate-900 font-bold mb-1" data-i18n="step3Title">Paste Key & Battle</h3>
+                    <p class="text-[11px] text-slate-600 leading-relaxed" data-i18n="step3Desc">
+                        Paste your 25-digit license key and press activate. Binds in 1 second and unlocks all combat features instantly.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer & Compliance -->
+    <footer id="support" class="bg-white/85 backdrop-blur-md border-t border-slate-200/80 mt-16 py-12 px-6 relative z-10">
+        <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-8 mb-10 text-xs text-slate-600 leading-relaxed">
+            <div>
+                <h4 class="font-pixel text-sm text-slate-900 font-bold mb-2" data-i18n="policyTitle">Digital Goods Return Policy</h4>
+                <p data-i18n="policyDesc">
+                    All license keys are dispatched automatically and immediately upon payment completion. Due to the cryptographic single-device binding nature of digital software, activated keys are non-refundable. If you experience an invalid code, support will replace it immediately.
+                </p>
+            </div>
+            <div>
+                <h4 class="font-pixel text-sm text-slate-900 font-bold mb-2" data-i18n="termsTitle">Terms of Service</h4>
+                <p data-i18n="termsDesc">
+                    FEE Companion is an independent companion utility designed to enhance personal gameplay productivity and experience. Purchasing indicates agreement to operate within local regulations and game environment terms. Continued updates are provided for supported game versions.
+                </p>
+            </div>
+            <div>
+                <h4 class="font-pixel text-sm text-slate-900 font-bold mb-2" data-i18n="supportTitle">Support & Contact</h4>
+                <p class="mb-3" data-i18n="supportDesc">
+                    Have questions about your order, license key, or MuMu emulator setup? Reach out to support:
+                </p>
+                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+                    <span class="block text-[11px] text-slate-500" data-i18n="supportEmailLabel">Support Email:</span>
+                    <a href="mailto:2864593139@qq.com" class="text-sky-600 font-mono font-bold hover:underline">2864593139@qq.com</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="max-w-6xl mx-auto pt-6 border-t border-slate-200 text-center text-[11px] text-slate-500" data-i18n-html="copyrightHtml">
+            © 2026 FEE Companion Studio. All rights reserved. FEE Companion is an independent third-party utility and is not affiliated with, endorsed by, or sponsored by Nintendo, Intelligent Systems, or any official game publisher.
+        </div>
+    </footer>
+
+    <!-- Multilingual I18N Logic -->
+    <script>
+        const i18nData = {
+            en: {
+                pageTitle: "Fire Emblem Heroes MOD — In-Game Combat Menu",
+                navMod: "Mod Features",
+                navMuMu: "MuMu Player",
+                navPricing: "Pricing",
+                navGuide: "How to Use",
+                navSupport: "Support",
+                navGetKey: "Get Key",
+                heroBadge: "FEH COMPATIBLE // 120 FPS IN-GAME MOD",
+                heroTitleHtml: 'Fire Emblem Heroes <br><span class="text-sky-600">Companion MOD</span>',
+                heroBtnPricing: "PRICING",
+                heroBtnMuMu: "🎮 Recommended: MuMu Player",
+                modTitle: "Fire Emblem Heroes MOD Features",
+                modSubtitle: "Custom combat modifications and convenience toggles controlled directly via our floating HUD.",
+                mod1Pill: "1x ~ 999x",
+                mod1Title: "Damage Multiplier",
+                mod1Desc: "Freely scale your attack power with an interactive in-game slider from 1x up to 999x. One-hit clear high-difficulty stages, trials, and grind maps in seconds.",
+                mod2Pill: "God Mode",
+                mod2Title: "God Mode (Enemy Dmg = 0)",
+                mod2Desc: "Sets all incoming regular, special, and counter damage from enemies to zero. Keeps your entire formation safe with zero casualties.",
+                mod3Pill: "Freeze Turn",
+                mod3Title: "Freeze Enemy Attacks",
+                mod3Desc: "Directly suppresses and freezes hostile turns and counter-attacks. No incoming threats, allowing total mastery over the battlefield.",
+                mumuBadge: "PC / Mac Recommended",
+                mumuTitle: "Recommended Environment: MuMu Player",
+                mumuDescHtml: 'For desktop gamers, we recommend running on <strong class="text-slate-900 font-semibold">MuMu Player</strong>. Fully tested for smooth floating HUD rendering, keymapping, and 120 FPS high refresh rate.',
+                mumuFeature1: "Floating HUD Native Support",
+                mumuFeature2: "120 FPS High Refresh Rate",
+                mumuFeature3: "Windows & Mac Compatible",
+                mumuBoxTitle: "MuMu Player",
+                mumuBoxSub: "Official Installer (Win / Mac)",
+                mumuBoxBtn: "Download MuMu Player →",
+                mumuBoxFooterHtml: 'Official site: <a href="https://mumuemulator.com/en/download/" target="_blank" rel="noopener noreferrer" class="text-sky-600 hover:underline">mumuemulator.com</a>',
+                pricingTitle: "PRICING",
+                pricingSubtitle: "Instant digital delivery 24/7. License key displayed immediately upon checkout.",
+                badgeInstant: "✓ Instant Digital Delivery",
+                plan1Pill: "24 Hours",
+                plan1Title: "1-Day Trial Pass",
+                plan1Desc: "Instant 24-hour access with full functionality. Ideal for weekend trial testing and quick stage clears.",
+                plan1Btn: "Get 1-Day Key",
+                plan2Pill: "7 Days",
+                plan2Title: "7-Day Weekly Pass",
+                plan2Desc: "Covers a full Arena competition week and team event cycle. Enjoy unlimited quick farming for 7 days.",
+                plan2Btn: "Get 7-Day Key",
+                plan3Badge: "★ MOST POPULAR",
+                plan3Pill: "30 Days",
+                plan3Title: "30-Day Monthly Pass",
+                plan3Desc: "Matches the official monthly pass update cycle. Best cost-performance with ongoing game version adaptation.",
+                plan3Btn: "Get 30-Day Key",
+                plan4Pill: "Lifetime",
+                plan4Title: "Lifetime License",
+                plan4Desc: "One-time purchase for perpetual device usage. Zero recurring subscription costs, prime choice for dedicated summoners.",
+                plan4Btn: "Get Lifetime Key",
+                guideTitle: "Quick 3-Step Activation",
+                guideSubtitle: "From purchase to in-game deployment in under 2 minutes.",
+                step1Title: "Select License Plan",
+                step1Desc: "Checkout securely via Credit Card or Apple Pay. Your 25-character key is displayed instantly on-screen and emailed.",
+                step2Title: "Launch on Device",
+                step2Desc: "Open the game on your phone or PC MuMu Player. Tap the on-screen floating icon to summon the activation window.",
+                step3Title: "Paste Key & Battle",
+                step3Desc: "Paste your 25-digit license key and press activate. Binds in 1 second and unlocks all combat features instantly.",
+                policyTitle: "Digital Goods Return Policy",
+                policyDesc: "All license keys are dispatched automatically and immediately upon payment completion. Due to the cryptographic single-device binding nature of digital software, activated keys are non-refundable. If you experience an invalid code, support will replace it immediately.",
+                termsTitle: "Terms of Service",
+                termsDesc: "FEE Companion is an independent companion utility designed to enhance personal gameplay productivity and experience. Purchasing indicates agreement to operate within local regulations and game environment terms. Continued updates are provided for supported game versions.",
+                supportTitle: "Support & Contact",
+                supportDesc: "Have questions about your order, license key, or MuMu emulator setup? Reach out to support:",
+                supportEmailLabel: "Support Email:",
+                supportHours: "Hours: 24/7 Automated Dispatch & Daily Support",
+                copyrightHtml: '© 2026 FEE Companion Studio. All rights reserved. FEE Companion is an independent third-party utility and is not affiliated with, endorsed by, or sponsored by Nintendo, Intelligent Systems, or any official game publisher.'
+            },
+            ja: {
+                pageTitle: "ファイアーエムブレム ヒーローズ MOD — ゲーム内戦闘支援＆フローティングメニュー",
+                navMod: "MOD機能",
+                navMuMu: "MuMu Player",
+                navPricing: "料金プラン",
+                navGuide: "使い方",
+                navSupport: "サポート",
+                navGetKey: "キー入手",
+                heroBadge: "FEH 全バージョン対応 // 120 FPS ゲーム内MOD",
+                heroTitleHtml: 'ファイアーエムブレム ヒーローズ <br><span class="text-sky-600">支援 MOD</span>',
+                heroBtnPricing: "料金プラン",
+                heroBtnMuMu: "🎮 推奨環境：MuMu Player",
+                modTitle: "『FEH』MOD ゲーム内コア機能",
+                modSubtitle: "ゲーム画面に直接描画されるフローティングメニューから、いつでもワンタップで操作可能。",
+                mod1Pill: "1倍 〜 999倍",
+                mod1Title: "攻撃倍率スライダー",
+                mod1Desc: "ゲーム内スライダーで攻撃ダメージを1倍から999倍まで自在に強化。高難易度マップ、イベントボス、素材周回もワンパンで瞬時にクリア。",
+                mod2Pill: "無敵状態",
+                mod2Title: "無敵モード（被ダメージ0）",
+                mod2Desc: "敵からの通常攻撃、奥義、反撃ダメージをすべて0に抑制。自軍の英雄が倒れることなく、安全確実に勝利。",
+                mod3Pill: "敵行動停止",
+                mod3Title: "敵攻撃フリーズ",
+                mod3Desc: "敵フェーズの攻撃動作と反撃を完全に無効化。敵からの反撃圧力を受けず、自分のペースで戦局を完全支配。",
+                mumuBadge: "PC / Mac 推奨",
+                mumuTitle: "推奨環境：MuMu Player",
+                mumuDescHtml: 'PC（Windows / Mac）でプレイされる方には <strong class="text-slate-900 font-semibold">MuMu Player</strong> を推奨。フローティングメニュー動作確認済み、120 FPS 表示に対応。',
+                mumuFeature1: "フローティングHUD対応",
+                mumuFeature2: "120 FPS 高リフレッシュ",
+                mumuFeature3: "Windows / Mac 対応",
+                mumuBoxTitle: "MuMu Player",
+                mumuBoxSub: "公式インストーラー (Win & Mac)",
+                mumuBoxBtn: "MuMu をダウンロード →",
+                mumuBoxFooterHtml: '公式サイト <a href="https://mumuemulator.com/en/download/" target="_blank" rel="noopener noreferrer" class="text-sky-600 hover:underline">mumuemulator.com</a> より直接入手',
+                pricingTitle: "料金プラン",
+                pricingSubtitle: "24時間自動発行。お支払い完了後、即座にキーを発行します。",
+                badgeInstant: "✔ 即時デジタルキー発行",
+                plan1Pill: "24時間",
+                plan1Title: "1日お試しパス",
+                plan1Desc: "週末イベントの攻略や機能テストに最適な24時間フルアクセスパス。",
+                plan1Btn: "1日キーを入手",
+                plan2Pill: "7日間",
+                plan2Title: "7日間パス",
+                plan2Desc: "闘技場シーズンや週間レイドイベントの周回に最適な1週間無制限アクセス。",
+                plan2Btn: "7日キーを入手",
+                plan3Badge: "★ 一番人気",
+                plan3Pill: "30日間",
+                plan3Title: "マンスリーパス",
+                plan3Desc: "公式月額パスの周期に合わせた最もお得な30日間プラン。最新アプデにも常時対応。",
+                plan3Btn: "マンスリーキーを入手",
+                plan4Pill: "永久利用",
+                plan4Title: "永久ライセンス",
+                plan4Desc: "1回のお支払いで端末永久利用可能。追加の月額料金は一切かかりません。",
+                plan4Btn: "永久キーを入手",
+                guideTitle: "簡単3ステップでアクティベーション",
+                guideSubtitle: "購入から起動まで、2分以内で完了します。",
+                step1Title: "プランを選択",
+                step1Desc: "クレジットカードやApple Pay等で決済。25文字のキーが画面に表示され、メールにも即時送付されます。",
+                step2Title: "アプリを起動",
+                step2Desc: "スマホまたはPCの MuMu Player 上でゲームを起動。画面のフローティングアイコンをタップして認証画面を開きます。",
+                step3Title: "キーを貼付して開始",
+                step3Desc: "25文字のライセンスキーを貼り付けて「認証」を押すだけ。1秒で端末と紐付き、即座に機能が有効化されます。",
+                policyTitle: "デジタル商品返金ポリシー",
+                policyDesc: "すべてのライセンスキーは決済完了後すぐに自動発行されます。暗号化された端末紐付け型デジタル商品という性質上、認証後の返金は原則不可となります。万一認証エラー等が発生した場合は技術サポートにて迅速に再発行対応いたします。",
+                termsTitle: "利用規約",
+                termsDesc: "FEE Companion は、個人のゲームプレイ効率をサポートする独立したサードパーティ製コンパニオンツールです。ご購入・ご利用は各地域および環境の規定に準拠してください。対応バージョンに応じた継続アップデートを提供します。",
+                supportTitle: "サポート＆お問い合わせ",
+                supportDesc: "注文内容、キーの再発行、MuMu Playerの設定等についてご不明点はお気軽にご連絡ください。",
+                supportEmailLabel: "サポートメール：",
+                supportHours: "対応時間：24時間 自動キー発行 ＆ デイリーサポート",
+                copyrightHtml: '© 2026 FEE Companion Studio. All rights reserved. 本ツールは独立したサードパーティ製ユーティリティであり、任天堂、インテリジェントシステムズ、その他公式ゲームパブリッシャーとは一切関係ありません。'
+            },
+            "zh-TW": {
+                pageTitle: "火焰之紋章：英雄 — 輔助 MOD",
+                navMod: "模組功能",
+                navMuMu: "MuMu 模擬器",
+                navPricing: "價格方案",
+                navGuide: "使用說明",
+                navSupport: "技術支援",
+                navGetKey: "獲取卡密",
+                heroBadge: "FEH 全版本支援 // 120 FPS 遊戲內 MOD",
+                heroTitleHtml: '火焰之紋章：英雄 <br><span class="text-sky-600">輔助 MOD</span>',
+                heroBtnPricing: "價格方案",
+                heroBtnMuMu: "🎮 推薦環境：MuMu 模擬器",
+                modTitle: "《火焰之紋章：英雄》MOD 核心功能",
+                modSubtitle: "透過直接渲染在遊戲畫面的透明懸浮視窗，隨時一鍵開關各項戰鬥輔助。",
+                mod1Pill: "1倍 〜 999倍",
+                mod1Title: "傷害倍率滑桿",
+                mod1Desc: "在遊戲內透過互動滑桿自由調整攻擊輸出（1倍至999倍）。高難副本、活動 BOSS、日常素材關卡秒速一擊必殺。",
+                mod2Pill: "完全無敵",
+                mod2Title: "無敵模式（敵方傷害歸0）",
+                mod2Desc: "將敵方所有普通攻擊、奧義爆發與反擊傷害完全歸零。保護整支隊伍安然無恙，絕不減員陣亡。",
+                mod3Pill: "敵方靜止",
+                mod3Title: "凍結敵方攻擊",
+                mod3Desc: "直接壓制並禁用敵方行動回合的攻擊與反擊機制。不受敵方任何反手威脅，輕鬆掌控全場戰局。",
+                mumuBadge: "PC / Mac 執行推薦",
+                mumuTitle: "推薦環境：MuMu 模擬器",
+                mumuDescHtml: '電腦端玩家推薦使用 <strong class="text-slate-900 font-semibold">MuMu 模擬器</strong>，已實測相容懸浮窗與按鍵操作，支援 120 幀高刷新率，運作穩定。',
+                mumuFeature1: "懸浮窗完美適配",
+                mumuFeature2: "支援 120 幀高刷",
+                mumuFeature3: "支援 Windows 與 Mac",
+                mumuBoxTitle: "MuMu 模擬器",
+                mumuBoxSub: "官網安裝包 (Win / Mac)",
+                mumuBoxBtn: "下載 MuMu 模擬器 →",
+                mumuBoxFooterHtml: '官方網站直鏈 <a href="https://mumuemulator.com/en/download/" target="_blank" rel="noopener noreferrer" class="text-sky-600 hover:underline">mumuemulator.com</a>',
+                pricingTitle: "價格方案",
+                pricingSubtitle: "24小時自動發卡，付款後立即顯示卡密。",
+                badgeInstant: "✓ 數位卡密即時交付",
+                plan1Pill: "24 小時",
+                plan1Title: "1日體驗卡",
+                plan1Desc: "快速開啟 24 小時完整功能，最適合週末高難活動衝刺與即時功能測試。",
+                plan1Btn: "獲取1日卡密",
+                plan2Pill: "7 天",
+                plan2Title: "7日周卡",
+                plan2Desc: "橫跨整個競技場結算週與團隊競賽，享有一整週不限次數暢快使用。",
+                plan2Btn: "獲取7日周卡",
+                plan3Badge: "★ 最受歡迎",
+                plan3Pill: "30 天",
+                plan3Title: "30日月卡",
+                plan3Desc: "對標官方月卡更新週期，性價比極高，並享有後續遊戲版本免費適配更新。",
+                plan3Btn: "獲取30日月卡",
+                plan4Pill: "永久授權",
+                plan4Title: "終身永久卡",
+                plan4Desc: "一次性買斷本設備終身使用權，絕無任何續費負擔，核心玩家專屬首選。",
+                plan4Btn: "獲取終身永久卡",
+                guideTitle: "簡單 3 步快速啟用",
+                guideSubtitle: "從購買到遊玩，不到 2 分鐘即可搞定。",
+                step1Title: "選購卡密方案",
+                step1Desc: "使用信用卡或 Apple Pay 完成付款。25 位啟用卡密將立即顯示在網頁上並同步發送至您的信箱。",
+                step2Title: "啟動輔助設備",
+                step2Desc: "在手機或電腦 MuMu 模擬器中打開遊戲。點擊畫面上的懸浮圖示，即可喚出授權啟用視窗。",
+                step3Title: "貼上卡密立即開戰",
+                step3Desc: "將 25 位卡密貼入框中並點擊「啟用」，1 秒鐘內自動綁定設備並啟動全部功能。",
+                policyTitle: "數位虛擬商品退款協議",
+                policyDesc: "所有授權卡密均在付款成功後系統立即自動發放。由於數位卡密採用加密單一設備綁定機制，一旦啟用即可不可逆，因此卡密售出啟用後不予退款。若遇卡密校驗異常，技術客服將立即為您補發或更換有效卡密。",
+                termsTitle: "服務使用條款",
+                termsDesc: "FEE Companion 是一款旨在提升個人戰術生產力與遊戲體驗的獨立輔助工具。購買即代表您同意在符合當地法規與設備環境下使用。團隊將持續為支援的遊戲版本提供維護更新。",
+                supportTitle: "客戶支援與聯絡方式",
+                supportDesc: "若您對訂單、卡密啟用或 MuMu 模擬器設置有任何問題，歡迎隨時聯絡客服：",
+                supportEmailLabel: "客服信箱：",
+                supportHours: "服務時間：24小時 自動發卡 & 每日客服對賬",
+                copyrightHtml: '© 2026 FEE Companion Studio. 版權所有。本產品為獨立第三方遊戲輔助程序，與任天堂、Intelligent Systems 或任何官方遊戲發行商均無任何關聯。'
+            },
+            "zh-CN": {
+                pageTitle: "火焰纹章：英雄 — 辅助 MOD",
+                navMod: "模组功能",
+                navMuMu: "MuMu 模拟器",
+                navPricing: "价格套餐",
+                navGuide: "使用说明",
+                navSupport: "技术支持",
+                navGetKey: "获取卡密",
+                heroBadge: "FEH 全版本支持 // 120 FPS 游戏内 MOD",
+                heroTitleHtml: '火焰纹章：英雄 <br><span class="text-sky-600">辅助 MOD</span>',
+                heroBtnPricing: "价格套餐",
+                heroBtnMuMu: "🎮 推荐环境：MuMu 模拟器",
+                modTitle: "《火焰纹章：英雄》MOD 核心功能",
+                modSubtitle: "通过直接渲染在游戏画面的透明悬浮窗，随时一键开关各项战斗辅助。",
+                mod1Pill: "1倍 〜 999倍",
+                mod1Title: "伤害倍率滑块",
+                mod1Desc: "在游戏内通过交互滑块自由调整攻击输出（1倍至999倍）。高难副本、活动 BOSS、日常素材关卡秒速一击必杀。",
+                mod2Pill: "完全无敌",
+                mod2Title: "无敌模式（敌方伤害归0）",
+                mod2Desc: "将敌方所有普通攻击、奥义爆发与反击伤害完全归零。保护整支队伍安然无恙，绝不减员阵亡。",
+                mod3Pill: "敌方静止",
+                mod3Title: "冻结敌方攻击",
+                mod3Desc: "直接压制并禁用敌方行动回合的攻击与反击机制。不受敌方任何反手威胁，轻松掌控全场战局。",
+                mumuBadge: "PC / Mac 运行推荐",
+                mumuTitle: "推荐运行环境：MuMu 模拟器",
+                mumuDescHtml: '电脑端玩家推荐使用 <strong class="text-slate-900 font-semibold">MuMu 模拟器</strong>，已实测兼容悬浮窗与按键操作，支持 120 帧高刷新率，运行稳定。',
+                mumuFeature1: "悬浮窗完美适配",
+                mumuFeature2: "支持 120 帧高刷",
+                mumuFeature3: "支持 Windows 与 Mac",
+                mumuBoxTitle: "MuMu 模拟器",
+                mumuBoxSub: "官网安装包 (Win / Mac)",
+                mumuBoxBtn: "下载 MuMu 模拟器 →",
+                mumuBoxFooterHtml: '官方网站直链 <a href="https://mumuemulator.com/en/download/" target="_blank" rel="noopener noreferrer" class="text-sky-600 hover:underline">mumuemulator.com</a>',
+                pricingTitle: "价格套餐",
+                pricingSubtitle: "24小时自动发卡，付款后立即显示卡密。",
+                badgeInstant: "✓ 数字卡密即时交付",
+                plan1Pill: "24 小时",
+                plan1Title: "1日体验卡",
+                plan1Desc: "快速开启 24 小时完整功能，最适合周末高难活动冲刺与即时功能测试。",
+                plan1Btn: "获取1日卡密",
+                plan2Pill: "7 天",
+                plan2Title: "7日周卡",
+                plan2Desc: "横跨整个竞技场结算周与团队竞赛，享有一整周不限次数畅快使用。",
+                plan2Btn: "获取7日周卡",
+                plan3Badge: "★ 最受欢迎",
+                plan3Pill: "30 天",
+                plan3Title: "30日月卡",
+                plan3Desc: "对标官方月卡更新周期，性价比极高，并享有后续游戏版本免费适配更新。",
+                plan3Btn: "获取30日月卡",
+                plan4Pill: "永久授权",
+                plan4Title: "终身永久卡",
+                plan4Desc: "一次性买断本设备终身使用权，绝无任何续费负担，核心玩家专属首选。",
+                plan4Btn: "获取终身永久卡",
+                guideTitle: "简单 3 步快速激活",
+                guideSubtitle: "从购买到游玩，不到 2 分钟即可搞定。",
+                step1Title: "选购卡密方案",
+                step1Desc: "使用信用卡或 Apple Pay 完成付款。25 位激活卡密将立即显示在网页上并同步发送至您的邮箱。",
+                step2Title: "启动辅助设备",
+                step2Desc: "在手机或电脑 MuMu 模拟器中打开游戏。点击画面上的悬浮图标，即可唤出授权激活窗口。",
+                step3Title: "粘贴卡密立即开战",
+                step3Desc: "将 25 位卡密贴入框中并点击「激活」，1 秒钟内自动绑定设备并启动全部功能。",
+                policyTitle: "数字虚拟商品退款协议",
+                policyDesc: "所有授权卡密均在付款成功后系统立即自动发放。由于数字卡密采用加密单一设备绑定机制，一旦激活即可不可逆，因此卡密售出激活后不予退款。若遇卡密校验异常，技术客服将立即为您补发或更换有效卡密。",
+                termsTitle: "服务使用条款",
+                termsDesc: "FEE Companion 是一款旨在提升个人战术生产力与游戏体验的独立辅助工具。购买即代表您同意在符合当地法规与设备环境下使用。团队将持续为支持的游戏版本提供维护更新。",
+                supportTitle: "客户支持与联系方式",
+                supportDesc: "若您对订单、卡密激活或 MuMu 模拟器设置有任何问题，欢迎随时联系客服：",
+                supportEmailLabel: "客服邮箱：",
+                supportHours: "服务时间：24小时 自动发卡 & 每日客服对账",
+                copyrightHtml: '© 2026 FEE Companion Studio. 版权所有。本产品为独立第三方游戏辅助程序，与任天堂、Intelligent Systems 或任何官方游戏发行商均无任何关联。'
+            }
+        };
+
+        // Auto-detect browser language or fall back to English
+        function detectUserLang() {
+            const browserLang = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+            if (browserLang.startsWith('zh')) {
+                if (browserLang.includes('tw') || browserLang.includes('hk') || browserLang.includes('mo') || browserLang.includes('hant')) {
+                    return 'zh-TW';
+                }
+                return 'zh-CN';
+            }
+            if (browserLang.startsWith('ja')) {
+                return 'ja';
+            }
+            return 'en';
+        }
+
+        // Apply translations to DOM
+        function setLang(lang) {
+            const t = i18nData[lang] || i18nData.en;
+            document.documentElement.lang = lang;
+            document.title = t.pageTitle || 'Fire Emblem Heroes MOD';
+
+            // Update text elements
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (t[key] !== undefined) {
+                    el.textContent = t[key];
+                }
+            });
+
+            // Update HTML elements
+            document.querySelectorAll('[data-i18n-html]').forEach(el => {
+                const key = el.getAttribute('data-i18n-html');
+                if (t[key] !== undefined) {
+                    el.innerHTML = t[key];
+                }
+            });
+
+            // Update selector label
+            const labels = {
+                en: 'English',
+                ja: '日本語',
+                'zh-TW': '繁體中文',
+                'zh-CN': '简体中文'
+            };
+            const curText = document.getElementById('lang-cur-text');
+            if (curText) curText.textContent = labels[lang] || 'English';
+
+            const menu = document.getElementById('lang-menu');
+            if (menu) menu.classList.add('hidden');
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const initialLang = detectUserLang();
+            setLang(initialLang);
+
+            // Dropdown toggle
+            const btn = document.getElementById('lang-btn');
+            const menu = document.getElementById('lang-menu');
+            const wrapper = document.getElementById('lang-dropdown-wrapper');
+
+            if (btn && menu) {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    menu.classList.toggle('hidden');
+                });
+            }
+
+            document.addEventListener('click', (e) => {
+                if (wrapper && menu && !wrapper.contains(e.target)) {
+                    menu.classList.add('hidden');
+                }
+            });
+
+            // Retract navbar on 1/3 page scroll, restore reverse animation on return to top
+            const navHeader = document.getElementById('main-header');
+            if (navHeader) {
+                const handleNavScroll = () => {
+                    const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+                    const threshold = scrollableHeight > 0 ? scrollableHeight / 3 : 400;
+
+                    if (window.scrollY >= threshold) {
+                        navHeader.classList.add('-translate-y-full');
+                    } else {
+                        navHeader.classList.remove('-translate-y-full');
+                    }
+                };
+                window.addEventListener('scroll', handleNavScroll, { passive: true });
+                handleNavScroll();
+            }
+        });
+    </script>
+
+</body>
+</html>
